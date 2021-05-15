@@ -1,5 +1,5 @@
 import Sequelize from 'sequelize';
-import SeqConexion from '../config/conexion';
+import SeqConexion from '../config/conexion.js';
 
 const Reserva = SeqConexion.define('reserva', {
     id: {
@@ -25,7 +25,8 @@ const Reserva = SeqConexion.define('reserva', {
         type: Sequelize.INTEGER
     }
 }, {
-    timestamps: false
+    timestamps: false,
+    tableName: 'reserva'
 });
 
 export default Reserva;

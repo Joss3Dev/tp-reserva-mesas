@@ -1,7 +1,7 @@
 import Sequelize from 'sequelize';
-import sequelize from '../config/conexion';
-import Mesa from './Mesa';
-import Reserva from './Reserva';
+import sequelize from '../config/conexion.js';
+import Mesa from './Mesa.js';
+import Reserva from './Reserva.js';
 
 const Restaurante = sequelize.define('restaurante',{
     id: {
@@ -14,12 +14,15 @@ const Restaurante = sequelize.define('restaurante',{
     direccion: {
         type: Sequelize.TEXT
     }, 
-    max_X: {
+    max_x: {
         type: Sequelize.INTEGER
     }, 
-    max_Y:{
+    max_y:{
         type: Sequelize.INTEGER
     } 
+}, {
+    timestamps: false,
+    tableName: 'restaurante'
 });
 
 //Establecemos relacion 1 a N

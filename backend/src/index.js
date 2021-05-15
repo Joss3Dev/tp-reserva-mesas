@@ -1,7 +1,8 @@
-//import ServerApp from './server';
+import initApp from './server.js';
 
-const main = () => {
-    console.log("Servidor ejecutandose en el puerto 2000");
+const main = async () => {
+    await initApp.listen(8080);
+    console.log("Servidor ejecutandose en el puerto 8080");
 }
 
 main();

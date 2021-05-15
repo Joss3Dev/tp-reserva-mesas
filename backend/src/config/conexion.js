@@ -1,6 +1,6 @@
 import Sequelize from 'sequelize';
 
-export default sequelize = new Sequelize(
+const sequelize = new Sequelize(
     'db_reserva_de_mesas',
     'postgres',
     'postgres',
@@ -15,4 +15,6 @@ export default sequelize = new Sequelize(
             idle: 10000
         }
     }
-)
+);
+
+export default sequelize; 

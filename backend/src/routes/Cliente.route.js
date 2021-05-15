@@ -1,9 +1,10 @@
-import { Router } from 'express';
+import Router from 'express';
+import { crearCliente, obtenerClientes } from '../controllers/ClienteController.js';
 const router = Router();
 
 // /api/cliente
-router.post('/', /*Llamar controlador metodo post*/);
-router.get('/', /*Llamar controlador metodo get*/);
+router.post('/', crearCliente);
+router.get('/', obtenerClientes);
 
 
 export default router;

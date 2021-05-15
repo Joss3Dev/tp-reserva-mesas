@@ -1,6 +1,6 @@
 import Sequelize from 'sequelize';
-import SeqConexion from '../config/conexion';
-import Reserva from './Reserva';
+import SeqConexion from '../config/conexion.js';
+import Reserva from './Reserva.js';
 
 const Mesa = SeqConexion.define('mesa', {
     id: {
@@ -22,6 +22,9 @@ const Mesa = SeqConexion.define('mesa', {
     nro_piso: {
         type: Sequelize.INTEGER
     }
+},{
+    timestamps: false,
+    tableName: 'mesa'
 });
 
 //Una misma mesa puede ser reservada varias veces es decir 1 a N

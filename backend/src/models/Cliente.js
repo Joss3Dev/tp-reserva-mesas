@@ -1,6 +1,6 @@
 import Sequelize from 'sequelize';
-import SeqConexion from '../config/conexion';
-import Reserva from './Reserva';
+import SeqConexion from '../config/conexion.js';
+import Reserva from './Reserva.js';
 
 const Cliente = SeqConexion.define('cliente', {
     id: {
@@ -16,6 +16,9 @@ const Cliente = SeqConexion.define('cliente', {
     apellido:{
         type: Sequelize.TEXT
     }
+}, {
+    timestamps: false,
+    tableName: 'cliente'
 });
 
 //Un cliente puede hacer varias reservas 1 a N
