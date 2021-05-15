@@ -1,0 +1,24 @@
+
+<div class="container">
+    <div class="row">
+        <div class="col">ID</div>
+        <div class="col">RESTAURANTE</div>
+        <div class="col">MESA</div>
+        <div class="col">FECHA</div>
+        <div class="col">HORA</div>
+        <div class="col">CLIENTE</div>
+        <div class="col">CANTIDAD DE SILLAS</div>
+        <br/>
+    </div>
+    <div class="row" *ngFor="let reserva of reservas">
+        <div class="col">{{reserva.id}}</div>
+        <div class="col">{{reserva.restaurante}}</div>
+        <div class="col">{{reserva.mesa}}</div>
+        <div class="col">{{reserva.fecha}}</div>
+        <div class="col">{{reserva.hora}}</div>
+        <div class="col">{{reserva.cliente}}</div>
+        <div class="col">{{reserva.cantidad_sillas}}</div>
+        <br/>
+    </div>
+</div>
+<!-- {{reserva.id}} {{reserva.nombre}} -->
