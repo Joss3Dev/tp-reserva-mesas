@@ -1,11 +1,11 @@
-import Mesa from '../models/Mesa.js';
+import {Mesa} from '../sequelize/index.js';
 
 const crearMesa = async (req, res) => {
     try {
         let mesa = req.body;
         let nuevoMesa = await Mesa.create(mesa,{
-            fields: ["nombre_mesa", "pos_x", "pos_y", "nro_piso", "id_restaurante"],
-            returning: ["id","nombre_mesa", "pos_x", "pos_y", "nro_piso", "id_restaurante"]
+            fields: ["nombre_mesa", "pos_x", "pos_y", "nro_piso", "id_restaurante","capacidad"],
+            returning: ["id","nombre_mesa", "pos_x", "pos_y", "nro_piso", "id_restaurante","capacidad"]
         });
         if (nuevoMesa){
             return res.status(200).json({
@@ -24,9 +24,19 @@ const crearMesa = async (req, res) => {
 
 const listarMesas = async(req, res) => {
     try {
-        let mesas = await Mesa.findAll({
-            attributes: ["id","nombre_mesa", "pos_x", "pos_y", "nro_piso", "id_restaurante"]
-        });
+        const { idRestaurante } = req.params;
+        let mesas;
+        if(idRestaurante){
+            mesas = await Mesa.findAll({
+                attributes: ["id","nombre_mesa", "pos_x", "pos_y", "nro_piso", "id_restaurante","capacidad"],
+                where: {id_restaurante: idRestaurante}
+            });
+        }
+        else{
+            mesas = await Mesa.findAll({
+                attributes: ["id","nombre_mesa", "pos_x", "pos_y", "nro_piso", "id_restaurante","capacidad"]
+            });
+        }
         return res.json({
             data: mesas
         });

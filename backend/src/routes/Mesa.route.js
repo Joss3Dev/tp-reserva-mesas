@@ -6,7 +6,7 @@ const router = Router();
 router.post('/', crearMesa);
 router.put('/:id', actualizarMesa);
 router.delete('/:id', eliminarMesa);
-router.get('/', listarMesas);
+router.get('/:idRestaurante?', listarMesas);
 
 
 export default router;

@@ -17,7 +17,8 @@ create table mesa(
     id_restaurante integer not null,
     pos_x integer not null,
     pos_y integer not null,
-    nro_piso integer not null
+    nro_piso integer not null,
+    capacidad integer not null
 );
 
 alter table mesa add constraint id_restaurante_fk_me foreign key(id_restaurante) references restaurante(id);

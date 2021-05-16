@@ -1,5 +1,5 @@
 import Sequelize from 'sequelize';
-import SeqConexion from '../config/conexion.js';
+import SeqConexion from '../../config/conexion.js';
 import Reserva from './Reserva.js';
 
 const Cliente = SeqConexion.define('cliente', {
@@ -22,9 +22,9 @@ const Cliente = SeqConexion.define('cliente', {
 });
 
 //Un cliente puede hacer varias reservas 1 a N
-Cliente.hasMany(Reserva, { foreingKey: 'id_cliente', sourceKey: 'id'});
+//Cliente.hasMany(Reserva, { foreingKey: 'id_cliente', sourceKey: 'id'});
 
 // Y varias reservas corresponden a un cliente N a 1
-Reserva.belongsTo(Cliente, { foreingKey: 'id_cliente', sourceKey: 'id'})
+//Reserva.belongsTo(Cliente, { foreingKey: 'id_cliente', sourceKey: 'id'})
 
 export default Cliente;

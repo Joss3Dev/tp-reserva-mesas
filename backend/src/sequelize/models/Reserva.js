@@ -1,5 +1,5 @@
 import Sequelize from 'sequelize';
-import SeqConexion from '../config/conexion.js';
+import SeqConexion from '../../config/conexion.js';
 
 const Reserva = SeqConexion.define('reserva', {
     id: {
@@ -13,7 +13,7 @@ const Reserva = SeqConexion.define('reserva', {
         type: Sequelize.INTEGER
     },
     fecha: {
-        type: Sequelize.DATE
+        type: Sequelize.DATEONLY
     },
     rango_hora: {
         type: Sequelize.TEXT

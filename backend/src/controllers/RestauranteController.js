@@ -1,4 +1,4 @@
-import Restaurante from '../models/Restaurante.js';
+import {Restaurante} from '../sequelize/index.js';
 
 const crearRestaurante = async (req, res) => {
     try {

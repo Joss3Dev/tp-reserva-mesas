@@ -1,4 +1,4 @@
-import Cliente from '../models/Cliente.js';
+import {Cliente} from '../sequelize/index.js';
 
 const crearCliente = async (req, res) => {
     try {
@@ -36,4 +36,20 @@ const obtenerClientes = async(req, res) => {
     }
 }
 
-export { crearCliente, obtenerClientes }
+const clienteCedula = async(req, res) => {
+    try {
+        const { cedula } = req.params;
+        let cliente = await Cliente.findOne({ where: { cedula: cedula } });
+        return res.json({
+            data: cliente
+        });
+    }
+    catch(e){
+        console.log(e);
+        return res.status(500).json({
+            mensaje: "Error al traer el cliente"
+        });
+    }
+}
+
+export { crearCliente, obtenerClientes, clienteCedula }
