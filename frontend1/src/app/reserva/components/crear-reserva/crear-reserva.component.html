@@ -1,0 +1,79 @@
+<form>
+<ngb-accordion [closeOthers]="true" [activeIds]="activado">
+  <ngb-panel id="static-1" title="Restaurante - Fecha - Horario">
+    <ng-template ngbPanelContent>
+    <div class="form-group row"><label class="col-sm-2 col-form-label">Restaurante: </label>
+      <div class="col-sm-4">
+          <select class="form-control" [(ngModel)]="reserva.id_restaurante" name="restaurante" (change)="buscarMesasDisponibles()">
+            <option *ngFor="let item of lista" [value]="item.id">{{item.nombre}}</option>
+          </select>
+        </div>
+    </div>
+      <div class="form-group row">
+        <label class="col-sm-2 col-form-label">Fecha</label>
+        <div class="col-sm-4">
+          <input class="form-control" type="date" [(ngModel)]="reserva.fecha" name="fecha" (change)="buscarMesasDisponibles()">
+        </div>
+      </div>
+      <br>
+      Cantidad de horas:<br>
+      <div>
+          <div class="form-check form-check-inline" *ngFor="let option of [1,2,3,4]">
+            <input class="form-check-input" type="radio"  name="horMax" [(ngModel)]="horaMax" [value]="option" (change)="buildRango()" />
+            <label class="form-check-label">{{option}}</label>
+          </div>
+      </div>
+
+
+      <div class="form-group row">
+        <label class="col-sm-2 col-form-label">Horarios:</label>
+        <div class="col-sm-4">
+          <select [(ngModel)]="reserva.rango_hora" name="rango" class="form-control" (change)="buscarMesasDisponibles()">
+            <option *ngFor="let item of horarios">{{item}}</option>
+          </select>
+        </div>
+      </div>
+      {{reserva}}
+      {{horaMax}}
+    </ng-template>
+
+  </ngb-panel>
+
+  <ngb-panel id="static-3" title="Mesa - Datos Cliente" [disabled]="!(reserva.id_restaurante&&reserva.fecha&&reserva.rango_hora&&mesas.length>0)">
+    <ng-template ngbPanelContent>
+      <div class="form-group row">
+        <label class="col-sm-2 col-form-label">Mesas Disponibles:</label>
+        <div class="col-sm-4">
+          <select [(ngModel)]="reserva.id_mesa" name="mesa" class="form-control">
+            <option *ngFor="let item of mesas" [value]="item.id">{{item.nombre_mesa}}</option>
+          </select>
+        </div>
+      </div>
+      <br>
+      <div class="form-group row">
+        <label class="col-sm-2 col-form-label">Cedula Cliente</label>
+        <div class="col-sm-2">
+          <input class="form-control" type="number" [(ngModel)]="cliente.cedula" name="cedula">
+        </div>
+        <div class="col-sm-4">
+          <input class="form-control" type="text" [(ngModel)]="cliente.nombre" name="nombre" readonly placeholder="Nombre Cliente">
+        </div>
+        <div class="col-sm-2">
+          <button class="btn btn-lg btn-outline-secondary" (click)="open()">Buscar cliente</button>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-sm-2 col-form-label">Cantidad Solicitada</label>
+        <div class="col-sm-4">
+          <input class="form-control" type="number" [(ngModel)]="reserva.cantidad_solicitada" name="cantidad">
+        </div>
+      </div>
+      <button type="button" class="btn btn-primary">Guardar</button>
+<!--!(reserva.id_restaurante&&reserva.fecha&&reserva.rango_hora&&mesas.length>0)-->
+
+    </ng-template>
+  </ngb-panel>
+</ngb-accordion>
+</form>
+
+
