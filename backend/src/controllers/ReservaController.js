@@ -3,7 +3,8 @@ import {Mesa, Reserva} from '../sequelize/index.js';
 const crearReserva = async (req, res) => {
     try {
         let reserva = req.body;
-        let mesa = await Mesa.findOne({ where: { id: reserva.id_mesa } });
+        let mesa = await Mesa.findOne({ attributes: ["id","nombre_mesa", "pos_x", "pos_y", "nro_piso", "id_restaurante","capacidad"],
+        where: { id: reserva.id_mesa } });
         if(mesa.capacidad<reserva.cantidad_solicitada){
             return res.status(500).json({
                 mensaje: "La cantidad solicitada sobrepasa la capacidad de la mesa"

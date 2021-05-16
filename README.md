@@ -47,7 +47,8 @@ Un sistema para reservar mesas en restaurantes, implementado con Node.js y Angul
     "pos_x": integer,
     "pos_y": integer, 
     "nro_piso": integer,
-    "id_restaurante": integer
+    "id_restaurante": integer,
+    "capacidad": integer
 }
 ``` 
 > GET / -> lista todas las mesas
@@ -58,11 +59,25 @@ Un sistema para reservar mesas en restaurantes, implementado con Node.js y Angul
     "nombre_mesa": string, 
     "pos_x": integer,
     "pos_y": integer, 
-    "nro_piso": integer
+    "nro_piso": integer,
+    "capacidad": integer
 }
 ``` 
 
 > DELETE /id  -> eliminar mesa
 
+- Ruta **/api/reserva** 
+> POST / -> agregar reserva
+```json
+{
+    "id_restaurante":1, 
+    "id_mesa":2, 
+    "fecha":"2021-05-16", 
+    "rango_hora":"12 a 13", 
+    "id_cliente": 1, 
+    "cantidad_solicitada": 1
+}
+``` 
+> GET /idRestaurante/fecha/clienteId(optional) -> lista todos las reservas
 
  
