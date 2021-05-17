@@ -33,8 +33,7 @@
           </select>
         </div>
       </div>
-      {{reserva}}
-      {{horaMax}}
+
     </ng-template>
 
   </ngb-panel>
@@ -45,7 +44,7 @@
         <label class="col-sm-2 col-form-label">Mesas Disponibles:</label>
         <div class="col-sm-4">
           <select [(ngModel)]="reserva.id_mesa" name="mesa" class="form-control">
-            <option *ngFor="let item of mesas" [value]="item.id">{{item.nombre_mesa}}</option>
+            <option *ngFor="let item of mesas" [value]="item.id">{{item.nombre_mesa+"- Capacidad: "+item.capacidad}}</option>
           </select>
         </div>
       </div>
@@ -68,12 +67,32 @@
           <input class="form-control" type="number" [(ngModel)]="reserva.cantidad_solicitada" name="cantidad">
         </div>
       </div>
-      <button type="button" class="btn btn-primary">Guardar</button>
+      <button type="button" class="btn btn-primary" (click)="guardar()">Guardar</button>
 <!--!(reserva.id_restaurante&&reserva.fecha&&reserva.rango_hora&&mesas.length>0)-->
 
     </ng-template>
   </ngb-panel>
 </ngb-accordion>
+
+<p>
+  <ngb-alert [dismissible]="false" *ngIf="activar">
+    <strong>No hay mesas disponibles!</strong>
+  </ngb-alert>
+</p>
+<p>
+  <ngb-alert [dismissible]="false" *ngIf="reservaError" type="danger">
+    <strong>Ocurrio un error al crear la reserva</strong>
+  </ngb-alert>
+</p>
+<p>
+  <ngb-alert [dismissible]="false" *ngIf="clienteError" type="danger">
+    <strong>Ocurrio un error al crear el cliente</strong>
+  </ngb-alert>
+  <ngb-alert [dismissible]="false" *ngIf="creadoConExito" type="sucess">
+    <strong>Reserva Creada exitosamente</strong>
+  </ngb-alert>
+</p>
+
 </form>
 
 

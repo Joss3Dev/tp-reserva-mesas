@@ -5,4 +5,5 @@ export class Mesa {
   pos_x:number
   pos_y:number
   nro_piso:number
+  capacidad:number
 }
