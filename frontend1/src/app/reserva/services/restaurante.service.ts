@@ -20,4 +20,8 @@ export class RestauranteService {
    return this.httpClient.get<ResponseLista<Restaurante>>(this.baseUrl+this.api).pipe(map(ev => ev.data));
   }
 
+  getRestaurenteId(id): Observable<Restaurante>{
+    return this.httpClient.get<Restaurante>(this.baseUrl+this.api+id).pipe(map(ev => ev.data));
+   }
+
 }

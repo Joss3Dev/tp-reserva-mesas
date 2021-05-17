@@ -21,6 +21,22 @@ const crearRestaurante = async (req, res) => {
     }
 }
 
+const restauranteId = async(req, res) => {
+    try {
+        const { id } = req.params;
+        let restaurante = await Restaurante.findOne({ where: { id: id } });
+        return res.json({
+            data: restaurante
+        });
+    }
+    catch(e){
+        console.log(e);
+        return res.status(500).json({
+            mensaje: "Error al traer el restaurante"
+        });
+    }
+}
+
 const listarRestaurantes = async(req, res) => {
     try {
         let restaurantes = await Restaurante.findAll();
@@ -62,4 +78,4 @@ const actualizarRestaurante = async (req, res) => {
     }
 }
 
-export { crearRestaurante, listarRestaurantes, eliminarRestaurante, actualizarRestaurante }
+export { crearRestaurante, listarRestaurantes, eliminarRestaurante, actualizarRestaurante, restauranteId }

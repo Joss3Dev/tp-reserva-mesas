@@ -1,0 +1,18 @@
+<div>
+  <form [formGroup]="filtrarReservaForm" (ngSubmit)="onSubmit()">
+    <label for="idRestaurante">Restaurantes</label><br>
+    <select formControlName="idRestaurante">
+      <option *ngFor="let restaurante of listaRestaurantes" [ngValue]="restaurante.id">{{restaurante.nombre}}</option>
+    </select>
+    <br/>
+    <br/>
+    <label for="fechaReserva">Fecha de la Reserva</label>
+    <div class="input-group">
+      <input id="fecha" formControlName="fecha" placeholder="dd-mm-yyyy" name="dp" ngbDatepicker #dp="ngbDatepicker">
+      <div class="input-group-append">
+        <button class="btn btn-outline-secondary calendar" (click)="dp.toggle()" type="button"></button>
+      </div>
+    </div>
+    <button type="submit" class="btn btn-danger btn-lg btn-block">Ver lista</button>
+  </form>
+</div>

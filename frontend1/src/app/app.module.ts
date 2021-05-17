@@ -9,12 +9,17 @@ import { AppComponent } from './app.component';
 import { CrearReservaComponent } from './reserva/components/crear-reserva/crear-reserva.component';
 import { CrearClienteComponent } from './reserva/components/crear-cliente/crear-cliente.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ListaReservasComponent } from './reserva/components/listar-reservas/lista-reservas.component';
+import { FiltroListaReservasComponent } from './reserva/components/filtro-listar-componentes/filtro-lista-reservas.component';
+import { DatePipe } from '@angular/common';
 
 @NgModule({
   declarations: [
     AppComponent,
     CrearReservaComponent,
-    CrearClienteComponent
+    CrearClienteComponent,
+    ListaReservasComponent,
+    FiltroListaReservasComponent
   ],
   imports: [
     BrowserModule,
@@ -24,7 +29,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     FormsModule,
     ReactiveFormsModule
   ],
-  providers: [{ provide: "BASE_API_URL", useValue: environment.apiUrl }],
+  providers: [{ provide: "BASE_API_URL", useValue: environment.apiUrl }, DatePipe],
   bootstrap: [AppComponent],
   entryComponents: [CrearClienteComponent]
 })
