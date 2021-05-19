@@ -2,9 +2,9 @@
 <ngb-accordion [closeOthers]="true" [activeIds]="activado">
   <ngb-panel id="static-1" title="Restaurante - Fecha - Horario">
     <ng-template ngbPanelContent>
-    <div class="form-group row"><label class="col-sm-2 col-form-label">Restaurante: </label>
+    <div class="form-group row mb-3"><label class="col-sm-2 col-form-label">Restaurante: </label>
       <div class="col-sm-4">
-          <select class="form-control" [(ngModel)]="reserva.id_restaurante" name="restaurante" (change)="buscarMesasDisponibles()" #restaurante="ngModel" [ngClass]="{ 'is-invalid': f.submitted && restaurante.invalid }" required>
+          <select class="form-control form-select" [(ngModel)]="reserva.id_restaurante" name="restaurante" (change)="buscarMesasDisponibles()" #restaurante="ngModel" [ngClass]="{ 'is-invalid': f.submitted && restaurante.invalid }" required>
             <option *ngFor="let item of lista" [value]="item.id">{{item.nombre}}</option>
           </select>
           <div *ngIf="f.submitted && restaurante.invalid" class="invalid-feedback">
@@ -12,7 +12,7 @@
         </div>
         </div>
     </div>
-      <div class="form-group row">
+      <div class="form-group row mb-3">
         <label class="col-sm-2 col-form-label">Fecha</label>
         <div class="col-sm-4">
           <input class="form-control" type="date" [min]="today" [(ngModel)]="reserva.fecha" name="fecha" (change)="buscarMesasDisponibles()" #fecha="ngModel" [ngClass]="{ 'is-invalid': f.submitted && fecha.invalid }" required>
@@ -21,7 +21,6 @@
         </div>
         </div>
       </div>
-      <br>
       Cantidad de horas:<br>
       <div>
           <div class="form-check form-check-inline" *ngFor="let option of [1,2,3,4]">
@@ -31,10 +30,10 @@
       </div>
 
 
-      <div class="form-group row">
+      <div class="form-group row mb-3">
         <label class="col-sm-2 col-form-label">Horarios:</label>
         <div class="col-sm-4">
-          <select [(ngModel)]="reserva.rango_hora" name="rango" class="form-control" (change)="buscarMesasDisponibles()" #rango_hora="ngModel" [ngClass]="{ 'is-invalid': f.submitted && rango_hora.invalid }" required>
+          <select [(ngModel)]="reserva.rango_hora" name="rango" class="form-control form-select" (change)="buscarMesasDisponibles()" #rango_hora="ngModel" [ngClass]="{ 'is-invalid': f.submitted && rango_hora.invalid }" required>
             <option *ngFor="let item of horarios">{{item}}</option>
           </select>
           <div *ngIf="f.submitted && rango_hora.invalid" class="invalid-feedback">
@@ -49,10 +48,10 @@
 
   <ngb-panel id="static-3" title="Mesa - Datos Cliente" [disabled]="!(reserva.id_restaurante&&reserva.fecha&&reserva.rango_hora&&mesas.length>0)">
     <ng-template ngbPanelContent>
-      <div class="form-group row">
+      <div class="form-group row mb-3">
         <label class="col-sm-2 col-form-label">Mesas Disponibles:</label>
         <div class="col-sm-4">
-          <select [(ngModel)]="reserva.id_mesa" name="mesa" class="form-control" #mesa="ngModel" [ngClass]="{ 'is-invalid': f.submitted && mesa.invalid }" required>
+          <select [(ngModel)]="reserva.id_mesa" name="mesa" class="form-control form-select" #mesa="ngModel" [ngClass]="{ 'is-invalid': f.submitted && mesa.invalid }" required>
             <option *ngFor="let item of mesas" [value]="item.id">{{item.nombre_mesa+"- Capacidad: "+item.capacidad}}</option>
           </select>
           <div *ngIf="f.submitted && mesa.invalid" class="invalid-feedback">
@@ -60,8 +59,7 @@
         </div>
         </div>
       </div>
-      <br>
-      <div class="form-group row">
+      <div class="form-group row mb-3">
         <label class="col-sm-2 col-form-label">Cedula Cliente</label>
         <div class="col-sm-2">
           <input class="form-control" type="number" [(ngModel)]="cliente.cedula" name="cedula" #cedula="ngModel" [ngClass]="{ 'is-invalid': f.submitted && cedula.invalid }" required>
@@ -69,17 +67,17 @@
             <div *ngIf="cedula.errors.required">Cedula requerida</div>
         </div>
         </div>
-        <div class="col-sm-4">
+        <div class="col-sm-2">
           <input class="form-control" type="text" [(ngModel)]="cliente.nombre" name="nombre" readonly placeholder="Nombre Cliente" #nombre="ngModel" [ngClass]="{ 'is-invalid': f.submitted && nombre.invalid }" required>
           <div *ngIf="f.submitted && nombre.invalid" class="invalid-feedback">
             <div *ngIf="nombre.errors.required">Busque un cliente</div>
         </div>
         </div>
         <div class="col-sm-2">
-          <button type="button" class="btn btn-lg btn-outline-secondary" (click)="open()">Buscar cliente</button>
+          <button type="button" class="btn btn-outline-secondary" (click)="open()">Buscar cliente</button>
         </div>
       </div>
-      <div class="form-group row">
+      <div class="form-group row mb-3">
         <label class="col-sm-2 col-form-label">Cantidad Solicitada</label>
         <div class="col-sm-4">
           <input class="form-control" type="number" [(ngModel)]="reserva.cantidad_solicitada" name="cantidad" #cantidad="ngModel" [ngClass]="{ 'is-invalid': f.submitted && cantidad.invalid }" required>
@@ -89,10 +87,9 @@
         </div>
 
       </div>
-      <div class="text-center">
-        <button class="btn btn-primary mr-1">Guardar</button>
+        <button class="btn btn-primary">Guardar</button>
 
-    </div>
+
 
 <!--!(reserva.id_restaurante&&reserva.fecha&&reserva.rango_hora&&mesas.length>0)-->
 
