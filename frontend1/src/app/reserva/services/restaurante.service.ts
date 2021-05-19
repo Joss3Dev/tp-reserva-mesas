@@ -21,7 +21,7 @@ export class RestauranteService {
   }
 
   getRestaurenteId(id): Observable<Restaurante>{
-    return this.httpClient.get<Restaurante>(this.baseUrl+this.api+id).pipe(map(ev => ev.data));
+    return this.httpClient.get(this.baseUrl+this.api+id).pipe(map(ev => ev["data"]));
    }
 
 }

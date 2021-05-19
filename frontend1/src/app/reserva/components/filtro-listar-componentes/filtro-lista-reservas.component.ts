@@ -31,7 +31,7 @@ export class FiltroListaReservasComponent implements OnInit {
     private restauranteService: RestauranteService,
     private clienteService: ClienteService,
     private datepipe: DatePipe
-  ) { 
+  ) {
     this.filtrarReservaForm = new FormGroup({
       idRestaurante: new FormControl('', [Validators.required]),
       fecha: new FormControl('', [Validators.required]),
@@ -57,7 +57,7 @@ export class FiltroListaReservasComponent implements OnInit {
     let restaurante = this.filtrarReservaForm.value.idRestaurante
     let fecha = this.filtrarReservaForm.value.fecha
     let cliente = this.filtrarReservaForm.value.cedulaCliente
-    fecha = String(fecha.year)+"-"+String(fecha.month)+"-"+String(fecha.day)
+    fecha = new Date(fecha.year,fecha.month-1,fecha.day).toISOString().slice(0, 10);
     this.router.navigate(['/listar-reserva-filtrado/'],{queryParams: {idRestaurante: restaurante, fecha: fecha, cedulaCliente: cliente}})
   }
 

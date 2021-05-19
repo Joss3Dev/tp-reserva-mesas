@@ -25,6 +25,6 @@ export class ClienteService {
     return this.httpClient.get<ResponseLista<Cliente>>(this.baseUrl+this.api).pipe(map(ev=>ev.data));
   }
   getCliente(cedulaCliente: number):Observable<Cliente>{
-    return this.httpClient.get<Cliente>(this.baseUrl+this.api+cedulaCliente).pipe(map(ev=>ev.data))
+    return this.httpClient.get(this.baseUrl+this.api+cedulaCliente).pipe(map(ev=>ev["data"]))
   }
 }

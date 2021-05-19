@@ -72,8 +72,11 @@ export class CrearReservaComponent implements OnInit {
         this.reservaService.crearReserva(this.reserva).subscribe(res1=>{
           this.creadoConExito=true;
           console.log("Creado con exito");
-          this.router.navigate(['crear-reserva']);
-          this.router.navigateByUrl("/crear-reserva")
+          setTimeout(() =>
+{
+    this.router.navigateByUrl("/listar-reserva");
+},
+5000);
         },err=>this.reservaError=true)
       },err=>this.clienteError=true)
 
@@ -84,7 +87,11 @@ export class CrearReservaComponent implements OnInit {
       this.reservaService.crearReserva(this.reserva).subscribe(res=>{
         console.log("Creado con exito")
         this.creadoConExito=true;
-        this.router.navigateByUrl("/crear-reserva");
+        setTimeout(() =>
+{
+    this.router.navigateByUrl("/listar-reserva");
+},
+5000);
       },err=>this.reservaError=true)
     }
   }
