@@ -4,7 +4,11 @@ import restauranteRoute from './routes/Restaurante.route.js';
 import mesaRoute from './routes/Mesa.route.js';
 import reservaRoute from './routes/Reserva.route.js';
 import cors from 'cors';
+import morgan from 'morgan';
 const initApp = express();
+
+//Log HTTP registra todas las peticiones entrantes
+initApp.use(morgan('dev'));
 
 //habilitar cors angular
 initApp.use(cors({

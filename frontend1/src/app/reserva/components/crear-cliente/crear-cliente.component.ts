@@ -21,4 +21,8 @@ export class CrearClienteComponent implements OnInit {
     this.activeModal.close(this.cliente)
   }
 
+  salir(){
+    this.activeModal.close(null)
+  }
+
 }

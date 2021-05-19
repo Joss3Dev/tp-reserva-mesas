@@ -10,6 +10,11 @@ const crearReserva = async (req, res) => {
                 mensaje: "La cantidad solicitada sobrepasa la capacidad de la mesa"
             });
         }
+        if(!(reserva.fecha) || new Date().toISOString().slice(0, 10)>reserva.fecha){
+            return res.status(500).json({
+                mensaje: "Fecha incorrecta"
+            });
+        }
         let nuevoReserva = await Reserva.create(reserva,{
             fields: ["id_restaurante", "id_mesa", "fecha", "rango_hora", "id_cliente","cantidad_solicitada"],
             returning: ["id","id_restaurante", "id_mesa", "fecha", "rango_hora", "id_cliente","cantidad_solicitada"]

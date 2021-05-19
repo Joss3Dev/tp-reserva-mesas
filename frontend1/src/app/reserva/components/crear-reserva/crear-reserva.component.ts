@@ -9,7 +9,7 @@ import { MesaService } from '../../services/mesa.service';
 import { ReservaService } from '../../services/reserva.service';
 import { RestauranteService } from '../../services/restaurante.service';
 import { CrearClienteComponent } from '../crear-cliente/crear-cliente.component';
-
+import { Router, ActivatedRoute, ParamMap } from '@angular/router'
 @Component({
   selector: 'app-crear-reserva',
   templateUrl: './crear-reserva.component.html',
@@ -25,8 +25,13 @@ export class CrearReservaComponent implements OnInit {
   cedula: number;
   mesas: Mesa[];
   cliente: Cliente= new Cliente();
+  activar=false;
+  clienteError = false;
+  reservaError =  false;
+  creadoConExito=false;
+  today=new Date().toISOString().slice(0, 10);
 
-  constructor(private modalService: NgbModal, private restauranteService: RestauranteService, private mesaService: MesaService, private reservaService: ReservaService, private clienteService: ClienteService) {}
+  constructor(private modalService: NgbModal, private restauranteService: RestauranteService, private mesaService: MesaService, private reservaService: ReservaService, private clienteService: ClienteService,private router: Router ) {}
 
   open() {
 
@@ -35,17 +40,53 @@ export class CrearReservaComponent implements OnInit {
       if(!res["data"]){
         this.cliente.nombre=""
         this.cliente.apellido=""
-        const modalRef = this.modalService.open(CrearClienteComponent);
+        const modalRef = this.modalService.open(CrearClienteComponent,{backdrop: 'static'});
+        let aux = new Cliente();
+        aux.cedula=this.cliente.cedula;
+        aux.nombre=this.cliente.nombre;
+        aux.apellido=this.cliente.apellido;
+        modalRef.componentInstance.cliente = aux;
+        modalRef.result.then(val => {
+          if(val)this.cliente=val
 
-        modalRef.componentInstance.cliente = this.cliente;
-        modalRef.result.then(val => this.cliente=val)
+        })
       }
       else{
         this.cliente=res["data"];
+
       }
 
     })
 
+  }
+
+  guardar(){
+    this.reservaError=false;
+    this.clienteError=false;
+    if(!this.cliente.id){
+      //crear primero cliente
+      if(!(this.cliente.nombre&&this.cliente.apellido&&this.cliente.cedula)) return;
+      if(!(this.reserva.id_mesa&&this.reserva.id_restaurante&&this.reserva.rango_hora&&this.reserva.fecha&&this.reserva.cantidad_solicitada)) return;
+      this.clienteService.crear(this.cliente).subscribe((res)=>{
+        this.reserva.id_cliente=res["dato"].id
+        this.reservaService.crearReserva(this.reserva).subscribe(res1=>{
+          this.creadoConExito=true;
+          console.log("Creado con exito");
+          this.router.navigate(['crear-reserva']);
+          this.router.navigateByUrl("/crear-reserva")
+        },err=>this.reservaError=true)
+      },err=>this.clienteError=true)
+
+    }
+    else{
+      this.reserva.id_cliente = this.cliente.id;
+      if(!(this.reserva.id_mesa&&this.reserva.id_restaurante&&this.reserva.rango_hora&&this.reserva.fecha&&this.reserva.cantidad_solicitada)) return;
+      this.reservaService.crearReserva(this.reserva).subscribe(res=>{
+        console.log("Creado con exito")
+        this.creadoConExito=true;
+        this.router.navigateByUrl("/crear-reserva");
+      },err=>this.reservaError=true)
+    }
   }
 
   buscarMesasDisponibles(){
@@ -72,6 +113,7 @@ export class CrearReservaComponent implements OnInit {
 
         })
         this.mesas = this.mesas.filter(mesa=>!ocupados.some(x=>x===mesa.id));
+        this.activar = this.mesas.length===0;
       })
     });
 
