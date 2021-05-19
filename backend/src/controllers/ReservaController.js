@@ -44,7 +44,8 @@ const listarReserva = async(req, res) => {
                 where: {
                     id_restaurante: idRestaurante,
                     fecha: fecha
-                }
+                },
+                order: [['rango_hora','ASC'],['id_mesa','ASC']]
             });
         }
         else{
@@ -54,7 +55,8 @@ const listarReserva = async(req, res) => {
                     id_restaurante: idRestaurante,
                     fecha: fecha,
                     id_cliente: idCliente
-                }
+                },
+                order: [['rango_hora','ASC'],['id_mesa','ASC']]
             });
         }
         return res.json({
