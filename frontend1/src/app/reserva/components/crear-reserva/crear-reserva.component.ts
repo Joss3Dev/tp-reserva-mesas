@@ -29,6 +29,7 @@ export class CrearReservaComponent implements OnInit {
   clienteError = false;
   reservaError =  false;
   creadoConExito=false;
+  today=new Date().toISOString().slice(0, 10);
 
   constructor(private modalService: NgbModal, private restauranteService: RestauranteService, private mesaService: MesaService, private reservaService: ReservaService, private clienteService: ClienteService,private router: Router ) {}
 
