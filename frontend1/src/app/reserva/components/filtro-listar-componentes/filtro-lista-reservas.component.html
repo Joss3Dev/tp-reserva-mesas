@@ -1,18 +1,26 @@
 <div>
   <form [formGroup]="filtrarReservaForm" (ngSubmit)="onSubmit()">
     <label for="idRestaurante">Restaurantes</label><br>
-    <select formControlName="idRestaurante">
+    <select formControlName="idRestaurante" required>
       <option *ngFor="let restaurante of listaRestaurantes" [ngValue]="restaurante.id">{{restaurante.nombre}}</option>
     </select>
     <br/>
     <br/>
     <label for="fechaReserva">Fecha de la Reserva</label>
     <div class="input-group">
-      <input id="fecha" formControlName="fecha" placeholder="dd-mm-yyyy" name="dp" ngbDatepicker #dp="ngbDatepicker">
+      <input id="fecha" formControlName="fecha" placeholder="dd-mm-yyyy" name="dp"  [(ngModel)]="model" ngbDatepicker #d="ngbDatepicker" required>
       <div class="input-group-append">
-        <button class="btn btn-outline-secondary calendar" (click)="dp.toggle()" type="button"></button>
+        <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"></button>
       </div>
     </div>
-    <button type="submit" class="btn btn-danger btn-lg btn-block">Ver lista</button>
+    <br/>
+    <br/>
+    <label for="cedulaCliente">Clientes</label><br>
+    <select formControlName="cedulaCliente">
+      <option *ngFor="let cliente of listaClientes" [ngValue]="cliente.cedula">{{cliente.nombre}} {{cliente.apellido}}</option>
+    </select>
+    <br/>
+    <br/>
+    <button type="submit" class="btn btn-danger btn-lg btn-block" [disabled]="filtrarReservaForm.invalid">Ver lista</button>
   </form>
 </div>

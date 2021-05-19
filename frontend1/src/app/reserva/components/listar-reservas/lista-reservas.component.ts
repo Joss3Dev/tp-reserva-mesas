@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Reserva } from 'src/app/model/reserva';
 import { Cliente } from '../../../model/cliente';
 import { Restaurante } from '../../../model/restaurante';
+import { ClienteService } from '../../services/cliente.service';
 import { MesaService } from '../../services/mesa.service';
 import { ReservaService } from '../../services/reserva.service';
 import { RestauranteService } from '../../services/restaurante.service';
@@ -24,6 +25,7 @@ export class ListaReservasComponent implements OnInit {
   constructor(
     private reservaService: ReservaService,
     private restauranteService: RestauranteService,
+    private clienteService: ClienteService,
     private router: Router,
     private route: ActivatedRoute,
   ) { }
@@ -35,13 +37,20 @@ export class ListaReservasComponent implements OnInit {
       this.restauranteService.getRestaurenteId(this.idRestaurante).subscribe(data =>{
         this.restaurante = data;
         this.fecha = params.fecha;
-        this.getReservas(this.idRestaurante, this.fecha)
+        if(params.cedulaCliente){
+          this.clienteService.getCliente(params.cedulaCliente).subscribe(data =>{
+            this.cliente = data;
+            this.getReservas(this.idRestaurante, this.fecha, this.cliente.id);
+          })
+        } else {
+          this.getReservas(this.idRestaurante, this.fecha);
+        }
       });
     }); 
   }
 
-  getReservas(idRestaurante, fecha){
-    this.reservaService.getReservas(idRestaurante, fecha).subscribe(
+  getReservas(idRestaurante, fecha, idCliente?){
+    this.reservaService.getReservas(idRestaurante, fecha, idCliente).subscribe(
       data =>{
         this.listaReservas = data        
       }

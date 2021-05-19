@@ -19,7 +19,11 @@ export class ReservaService {
 
   }
 
-  getReservas(idRestaurante: number, fecha: string): Observable<Reserva[]>{
-    return this.httpClient.get<ResponseLista<Reserva>>(this.baseUrl+this.api+`${idRestaurante}/${fecha}`).pipe(map(ev=>ev.data))
+  getReservas(idRestaurante: number, fecha: string, idCliente?: number): Observable<Reserva[]>{
+    if(idCliente){
+      return this.httpClient.get<ResponseLista<Reserva>>(this.baseUrl+this.api+`${idRestaurante}/${fecha}/${idCliente}`).pipe(map(ev=>ev.data))
+    }else{
+      return this.httpClient.get<ResponseLista<Reserva>>(this.baseUrl+this.api+`${idRestaurante}/${fecha}`).pipe(map(ev=>ev.data))
+    }
   }
 }
