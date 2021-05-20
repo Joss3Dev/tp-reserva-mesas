@@ -10,6 +10,39 @@ const crearReserva = async (req, res) => {
                 mensaje: "La cantidad solicitada sobrepasa la capacidad de la mesa"
             });
         }
+        let reservas = await Reserva.findAll({
+            attributes: ["id","id_restaurante", "id_mesa", "fecha", "rango_hora", "id_cliente","cantidad_solicitada"],
+            where: {
+                id_restaurante: reserva.id_restaurante,
+                fecha: reserva.fecha,
+                id_mesa: reserva.id_mesa
+            }
+        });
+        let rango = reserva.rango_hora.split(' ')
+        let min = rango[0];
+        let max = rango[2];
+        for (const i in reservas) {
+            rango = reservas[i].rango_hora.split(' ')
+            let min1 = rango[0];
+            let max1 = rango[2];
+            if(min>=min1 && min<max1){
+                return res.status(500).json({
+                    mensaje: "Mesa ocupada en ese horario"
+                });
+                
+            }
+            if(max>min1 && max<=max1){
+                return res.status(500).json({
+                    mensaje: "Mesa ocupada en ese horario"
+                });
+                
+            }
+        }
+        if(reserva.cantidad_solicitada<1){
+            return res.status(500).json({
+                mensaje: "Cantidad no valida"
+            });
+        }
         if(!(reserva.fecha) || new Date().toISOString().slice(0, 10)>reserva.fecha){
             return res.status(500).json({
                 mensaje: "Fecha incorrecta"

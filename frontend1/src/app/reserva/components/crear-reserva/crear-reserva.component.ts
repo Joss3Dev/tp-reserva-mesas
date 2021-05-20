@@ -76,7 +76,7 @@ export class CrearReservaComponent implements OnInit {
 {
     this.router.navigateByUrl("/listar-reserva");
 },
-5000);
+3000);
         },err=>this.reservaError=true)
       },err=>this.clienteError=true)
 
@@ -91,7 +91,7 @@ export class CrearReservaComponent implements OnInit {
 {
     this.router.navigateByUrl("/listar-reserva");
 },
-5000);
+3000);
       },err=>this.reservaError=true)
     }
   }

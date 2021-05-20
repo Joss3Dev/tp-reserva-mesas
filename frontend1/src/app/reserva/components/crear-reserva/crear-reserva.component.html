@@ -80,7 +80,7 @@
       <div class="form-group row mb-3">
         <label class="col-sm-2 col-form-label">Cantidad Solicitada</label>
         <div class="col-sm-4">
-          <input class="form-control" type="number" [(ngModel)]="reserva.cantidad_solicitada" name="cantidad" #cantidad="ngModel" [ngClass]="{ 'is-invalid': f.submitted && cantidad.invalid }" required>
+          <input class="form-control" min="1" type="number" [(ngModel)]="reserva.cantidad_solicitada" name="cantidad" #cantidad="ngModel" [ngClass]="{ 'is-invalid': f.submitted && cantidad.invalid }" required>
           <div *ngIf="f.submitted && cantidad.invalid" class="invalid-feedback">
             <div *ngIf="cantidad.errors.required">Cantidad de comensales no solicitado</div>
         </div>

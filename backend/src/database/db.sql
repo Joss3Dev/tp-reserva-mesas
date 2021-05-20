@@ -18,8 +18,10 @@ create table mesa(
     pos_x integer not null,
     pos_y integer not null,
     nro_piso integer not null,
-    capacidad integer not null
+    capacidad integer not null,
+    CONSTRAINT posicion_unica UNIQUE (pos_x, pos_y, nro_piso)
 );
+
 
 alter table mesa add constraint id_restaurante_fk_me foreign key(id_restaurante) references restaurante(id);
 
