@@ -81,3 +81,42 @@ Un sistema para reservar mesas en restaurantes, implementado con Node.js y Angul
 > GET /idRestaurante/fecha/clienteId(optional) -> lista todos las reservas
 
  
+- Ruta **/api/categoria**
+> POST / -> agregar categoria
+```json
+{
+    "nombre": string
+}
+``` 
+> GET /  -> lista todos las categorias
+
+> PUT /id  -> actualizar categoria
+```json
+{
+    "nombre": string
+}
+``` 
+
+> DELETE /id  -> eliminar categoria
+
+- Ruta **/api/producto**
+> POST /  -> agregar producto
+```json
+{
+    "nombre": string,  
+    "precio": integer,
+    "id_categoria": integer,
+}
+``` 
+> GET / -> lista todas los productos
+
+> PUT /id  -> actualizar producto
+```json
+{
+    "nombre": string,  
+    "precio": integer,
+    "id_categoria": integer,
+}
+``` 
+
+> DELETE /id  -> eliminar producto
