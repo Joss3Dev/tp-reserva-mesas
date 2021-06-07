@@ -3,6 +3,8 @@ import clienteRoute from './routes/Cliente.route.js';
 import restauranteRoute from './routes/Restaurante.route.js';
 import mesaRoute from './routes/Mesa.route.js';
 import reservaRoute from './routes/Reserva.route.js';
+import categoriaRoute from './routes/Categoria.route.js';
+import productoRoute from './routes/Producto.route.js';
 import cors from 'cors';
 import morgan from 'morgan';
 const initApp = express();
@@ -24,6 +26,8 @@ initApp.use('/api/cliente', clienteRoute);
 initApp.use('/api/restaurante', restauranteRoute);
 initApp.use('/api/mesa', mesaRoute);
 initApp.use('/api/reserva', reservaRoute);
+initApp.use('/api/categoria', categoriaRoute);
+initApp.use('/api/producto', productoRoute);
 
 export default initApp;
 
