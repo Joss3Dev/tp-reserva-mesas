@@ -4,6 +4,7 @@ import Reserva from "./models/Reserva.js";
 import Restaurante from "./models/Restaurante.js";
 import Categoria from "./models/Categoria.js";
 import Producto from "./models/Producto.js";
+import {Consumo,DetalleConsumo} from "./models/Consumo.js";
 
 
 //Establecemos relacion 1 a N
@@ -36,9 +37,54 @@ Categoria.hasMany(Producto, { foreingKey: 'id_categoria', sourceKey: 'id'})
 //Varios productos coresponde a una sola categoria N a 1
 Producto.belongsTo(Categoria, { foreingKey: 'id_categoria', sourceKey: 'id'});
 
+Mesa.hasMany(Consumo,{ foreignKey: {
+    allowNull: false,
+    name: 'id_mesa'
+  }});
+
+//Varias reservas en diferentes horarios pueden pertenecer a una misma mesa, es decir N a 1
+Consumo.belongsTo(Mesa, { foreignKey: {
+    allowNull: false,
+    name: 'id_mesa'
+  }});
+
+  Cliente.hasMany(Consumo,{ foreignKey: {
+    allowNull: false,
+    name: 'id_cliente'
+  }});
+
+//Varias reservas en diferentes horarios pueden pertenecer a una misma mesa, es decir N a 1
+Consumo.belongsTo(Cliente, { foreignKey: {
+    allowNull: false,
+    name: 'id_cliente'
+  }});
+
+/* //Un cliente puede hacer varias consumos 1 a N
+Cliente.hasMany(Consumo, { foreingKey: {
+    allowNull: false,
+    name: 'id_cliente',
+    field: 'id_cliente'
+    },sourceKey:"id"});
+
+// Y varias consumos corresponden a un cliente N a 1
+Consumo.belongsTo(Cliente,{ foreingKey: {
+    allowNull: false,
+    name: 'id_cliente',
+    field: 'id_cliente'
+    },targetKey:"id"}) */
+
+//Un producto puede haber en varias detalles 1 a N
+Producto.hasMany(DetalleConsumo, { foreignKey: {allowNull: false,name:'id_producto'}});
+
+// Y varias detalles corresponden a un producto N a 1
+DetalleConsumo.belongsTo(Producto, { foreignKey: {allowNull: false,name:'id_producto'}})
+
+
 export { Restaurante};
 export {Mesa};
 export { Cliente };
 export {Reserva };
 export {Categoria};
 export {Producto};
+export {Consumo};
+export {DetalleConsumo};
