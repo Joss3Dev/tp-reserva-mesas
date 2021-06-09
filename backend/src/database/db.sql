@@ -66,8 +66,8 @@ create table consumo(
     id_cliente integer not null,
     total integer not null,
     is_open boolean not null,
-    fecha_creacion timestamp without time zone not null,
-    fecha_cierre timestamp without time zone
+    fecha_creacion timestamp with time zone not null,
+    fecha_cierre timestamp with time zone
 );
 
 alter table consumo add constraint id_mesa_fk_cs foreign key(id_mesa) references mesa(id);
