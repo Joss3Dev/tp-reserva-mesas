@@ -152,6 +152,10 @@ Un sistema para reservar mesas en restaurantes, implementado con Node.js y Angul
 ``` 
 > GET /mesa/:idMesa -> obtener consumo abierto o null por mesa
 
+> GET /:idConsumo -> obtener consumo por id
+
+> GET / -> obtener lista de consumo sin detalles
+
 > PUT /idConsumo  -> actualizar producto
 ```json
 {

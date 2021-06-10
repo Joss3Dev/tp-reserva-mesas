@@ -83,6 +83,45 @@ const obtenerConsumoByMesa = async(req, res) => {
     }
 }
 
+const obtenerConsumo = async(req, res) => {
+    try {
+        
+        const { idConsumo} = req.params;
+        let consumo;
+        consumo = await Consumo.findByPk(idConsumo,{
+            
+            include: DetalleConsumo
+        })
+        
+        return res.json({
+            data: consumo
+        });
+    }
+    catch(e){
+        console.log(e);
+        return res.status(500).json({
+            mensaje: "Error al traer consumo"
+        });
+    }
+}
+
+const listarConsumo = async(req, res) => {
+    try {
+        
+        let consumos;
+        consumos = await Consumo.findAll();
+        return res.json({
+            data: consumos
+        });
+    }
+    catch(e){
+        console.log(e);
+        return res.status(500).json({
+            mensaje: "Error al traer lista consumo"
+        });
+    }
+}
+
 const modificarConsumo = async (req, res) => {
     try {
         let { idConsumo } = req.params;
@@ -160,4 +199,4 @@ const cerrarConsumo = async (req, res) => {
     }
 }
 
-export { obtenerConsumoByMesa, crearConsumo, cerrarConsumo, modificarConsumo };
+export { obtenerConsumoByMesa, crearConsumo, cerrarConsumo, modificarConsumo, obtenerConsumo, listarConsumo };
