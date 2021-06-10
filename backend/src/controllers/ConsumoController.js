@@ -24,7 +24,7 @@ const crearConsumo = async (req, res) => {
             returning: ["id","fecha_creacion","fecha_cierre","id_cliente","total","is_open","id_mesa"]
         });
         //TODO: CONSULTAR PRECIO POR PRODUCTO LADO SERVIDOR
-        total = 0
+        let total = 0
         //colocar el id del consumo a cada detalle y agregar
         for (const i in consumo.detalles) {
             consumo.detalles[i].id_consumo = nuevoConsumo.id
@@ -36,7 +36,8 @@ const crearConsumo = async (req, res) => {
 
         await nuevoConsumo.save({fields:["total"]})
 
-        nuevoConsumo.detalles = consumo.detalles
+        nuevoConsumo = await Consumo.findByPk(nuevoConsumo.id,{include: DetalleConsumo});
+        
         if (nuevoConsumo){
             return res.status(200).json({
                 mensaje: "Consumo creado con exito",
@@ -84,22 +85,23 @@ const obtenerConsumoByMesa = async(req, res) => {
 
 const modificarConsumo = async (req, res) => {
     try {
-        let { id } = req.params;
+        let { idConsumo } = req.params;
         let consumo = req.body;//tiene un atributo extra indicando los detalles a eliminar, un array de id 'eliminados'
         
-        let consumoBD = await Consumo.findByPk(id,{include: DetalleConsumo});
-
+        let consumoBD = await Consumo.findByPk(idConsumo,{include: DetalleConsumo});
+        console.log(consumoBD);
         consumoBD.id_cliente = consumo.id_cliente;
 
         //TODO: CONSULTAR PRECIO POR PRODUCTO LADO SERVIDOR 
-        total = 0
+        let total = 0
         //actualizar los detalles viejos y crear los nuevos
         for (const i in consumo.detalles) {
 
             if(consumo.detalles[i].id){//Si tiene id entonces actualizar
-                await DetalleConsumo.update(consumo.detalles[i], { where: { id : consumo.detalles[i].id}});
+                await DetalleConsumo.update(consumo.detalles[i], { where: { id : consumo.detalles[i].id},fields:["id_consumo","cantidad","id_producto","subtotal"],returning:true});
             }
             else{//Si no tiene entonces crear
+                consumo.detalles[i].id_consumo = consumoBD.id;
                 consumo.detalles[i] = await DetalleConsumo.create(consumo.detalles[i],{fields:["id_consumo","cantidad","id_producto","subtotal"],returning:true})
             }
             total += consumo.detalles[i].subtotal
@@ -111,9 +113,9 @@ const modificarConsumo = async (req, res) => {
         }
         
         consumoBD.total = total;
-        await consumoBD.save({fields:["id_cliente","total"]})
+        let nuevoConsumo = await consumoBD.save({fields:["id_cliente","total"]})
 
-        nuevoConsumo.detalles = consumo.detalles
+        nuevoConsumo.detalles = await Consumo.findByPk(idConsumo,{include: DetalleConsumo});
         if (nuevoConsumo){
             return res.status(200).json({
                 mensaje: "Consumo creado con exito",
@@ -140,6 +142,8 @@ const cerrarConsumo = async (req, res) => {
         consumo.fecha_cierre = new Date();
 
         consumo = await consumo.save()
+
+        consumo = await Consumo.findByPk(idConsumo,{include: DetalleConsumo});
 
         if (consumo){
             return res.status(200).json({
