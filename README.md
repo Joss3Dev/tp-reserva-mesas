@@ -120,3 +120,67 @@ Un sistema para reservar mesas en restaurantes, implementado con Node.js y Angul
 ``` 
 
 > DELETE /id  -> eliminar producto
+
+- Ruta **/api/consumo**
+> POST /  -> agregar consumo
+```json
+{
+    "id": 3,
+        "fecha_creacion": "2004-10-19T16:23:54.000Z",
+        "fecha_cierre": null,
+        "total": 30000,
+        "is_open": true,
+        "id_mesa": 2,
+        "id_cliente": 1,
+        "detalles": [
+            {
+                "id": 9,
+                "subtotal": 5000,
+                "cantidad": 1,
+                "id_consumo": 3,
+                "id_producto": 2
+            },
+            {
+                "id": 10,
+                "subtotal": 25000,
+                "cantidad": 1,
+                "id_consumo": 3,
+                "id_producto": 3
+            }
+        ]
+    }
+``` 
+> GET /mesa/:idMesa -> obtener consumo abierto o null por mesa
+
+> PUT /idConsumo  -> actualizar producto
+```json
+{
+    "id": 3,
+        "fecha_creacion": "2004-10-19T16:23:54.000Z",
+        "fecha_cierre": null,
+        "total": 30000,
+        "is_open": true,
+        "id_mesa": 2,
+        "id_cliente": 1,
+        "detalles": [
+            {
+                "id": 9,
+                "subtotal": 5000,
+                "cantidad": 1,
+                "id_consumo": 3,
+                "id_producto": 2
+            },
+            {
+                "id": 10,
+                "subtotal": 25000,
+                "cantidad": 1,
+                "id_consumo": 3,
+                "id_producto": 3
+            }
+        ]
+        ,
+        "eliminados":[idDetalle,idDetalle,id]
+    }
+``` 
+
+> DELETE /cerrar/idConsumo  -> cerrar Consumo
