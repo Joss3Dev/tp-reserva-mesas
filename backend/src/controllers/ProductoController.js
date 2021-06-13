@@ -25,6 +25,7 @@ const crearProducto = async (req, res) => {
 const listarProductos = async(req, res) => {
     try {
         const { idCategoria } = req.params;
+        console.log(idCategoria);
         let productos;
         if(idCategoria){
             productos = await Producto.findAll({
