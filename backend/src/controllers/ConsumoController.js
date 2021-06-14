@@ -23,18 +23,12 @@ const crearConsumo = async (req, res) => {
             fields: ["fecha_creacion","fecha_cierre","id_cliente","total","is_open","id_mesa"],
             returning: ["id","fecha_creacion","fecha_cierre","id_cliente","total","is_open","id_mesa"]
         });
-        //TODO: CONSULTAR PRECIO POR PRODUCTO LADO SERVIDOR
-        let total = 0
+        
         //colocar el id del consumo a cada detalle y agregar
         for (const i in consumo.detalles) {
             consumo.detalles[i].id_consumo = nuevoConsumo.id
             consumo.detalles[i] = await DetalleConsumo.create(consumo.detalles[i],{fields:["id_consumo","cantidad","id_producto","subtotal"],returning:true})
-            total += consumo.detalles[i].subtotal
         }
-
-        nuevoConsumo.total = total
-
-        await nuevoConsumo.save({fields:["total"]})
 
         nuevoConsumo = await Consumo.findByPk(nuevoConsumo.id,{include: DetalleConsumo});
         

@@ -6,7 +6,7 @@ const router = Router();
 router.post('/', crearProducto);
 router.put('/:id', actualizarProducto);
 router.delete('/:id', eliminarProducto);
-router.get('/:idRestaurante?', listarProductos);
+router.get('/:idCategoria?', listarProductos);
 
 
 export default router;
