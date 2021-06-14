@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Cliente } from 'src/app/model/cliente';
+import { Cliente} from 'src/app/model/cliente';
 import { ResponseLista } from 'src/app/model/response.lista';
 
 @Injectable({
@@ -18,10 +18,10 @@ export class ClienteService {
    return this.httpClient.get(this.baseUrl+this.api+id);
   }
 
-  crear(cliente: Cliente){
+  crear(cliente: Cliente):Observable<any>{
     return this.httpClient.post(this.baseUrl+this.api,cliente);
   }
-  getClientes(){
+  getClientes():Observable<any>{
     return this.httpClient.get<ResponseLista<Cliente>>(this.baseUrl+this.api).pipe(map(ev=>ev.data));
   }
   getCliente(cedulaCliente: number):Observable<Cliente>{

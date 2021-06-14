@@ -18,7 +18,12 @@ export class CrearClienteComponent implements OnInit {
 
   guardar(){
     if(!(this.cliente.cedula&&this.cliente.nombre&&this.cliente.apellido)) return;
-    this.activeModal.close(this.cliente)
+    this.clienteService.crear(this.cliente).subscribe((res)=>{
+      console.log(res);
+      this.cliente = res.dato;
+      this.activeModal.close(this.cliente);
+    })
+    
   }
 
   salir(){

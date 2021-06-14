@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { NgbModal, NgbTypeahead } from '@ng-bootstrap/ng-bootstrap';
 import { Cliente } from 'src/app/model/cliente';
 import { Mesa } from 'src/app/model/mesa';
 import { Reserva } from 'src/app/model/reserva';
@@ -10,6 +10,8 @@ import { ReservaService } from '../../services/reserva.service';
 import { RestauranteService } from '../../services/restaurante.service';
 import { CrearClienteComponent } from '../crear-cliente/crear-cliente.component';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router'
+import { merge, Observable, OperatorFunction, Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
 @Component({
   selector: 'app-crear-reserva',
   templateUrl: './crear-reserva.component.html',
@@ -23,8 +25,10 @@ export class CrearReservaComponent implements OnInit {
   reserva: Reserva=new Reserva();
   horaMax=1;
   cedula: number;
+  nombre: string;
   mesas: Mesa[];
-  cliente: Cliente= new Cliente();
+  public clientes: Cliente[];
+  cliente: Cliente;
   activar=false;
   clienteError = false;
   reservaError =  false;
@@ -61,6 +65,7 @@ export class CrearReservaComponent implements OnInit {
   }
 
   guardar(){
+    console.log(this.cliente)
     this.reservaError=false;
     this.clienteError=false;
     if(!this.cliente.id){
@@ -132,6 +137,10 @@ export class CrearReservaComponent implements OnInit {
   ngOnInit(){
     this.buildRango()
     this.restauranteService.getRestaurente().subscribe(res=>this.lista=res);
+    this.clienteService.getClientes().subscribe(res => {
+      this.clientes = res;
+      console.log(this.clientes);
+    })
     this.mesas = []
   }
 
@@ -146,6 +155,26 @@ export class CrearReservaComponent implements OnInit {
         }
         }
     })
+  }
+
+  @ViewChild('instance', {static: true}) instance: NgbTypeahead;
+  focus$ = new Subject<string>();
+  click$ = new Subject<string>();
+  formatter = (cliente: Cliente) => cliente.nombre+' '+cliente.apellido;
+
+
+  search: OperatorFunction<string, readonly string[]> = (text$: Observable<string>) => {
+    const debouncedText$ = text$.pipe(debounceTime(200), distinctUntilChanged());
+    const clicksWithClosedPopup$ = this.click$.pipe(filter(() => !this.instance));
+    const inputFocus$ = this.focus$;
+    var cadena;
+    console.log(this.clientes)
+    cadena = merge(debouncedText$, inputFocus$, clicksWithClosedPopup$).pipe(
+      map(term => (term === '' ? this.clientes
+        : this.clientes.filter(v => (v.nombre+' '+v.apellido).toLowerCase().indexOf(term.toLowerCase()) > -1)).slice(0, 10))
+    );
+    console.log(cadena)
+    return cadena;
   }
 
 }
