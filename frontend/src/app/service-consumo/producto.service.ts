@@ -14,7 +14,12 @@ export class ProductoService {
 
   constructor(private httpClient: HttpClient) { } 
 
+  getProductos(){
+    return this.httpClient.get<ResponseLista<Producto>>(environment.apiUrl+this.basePath).pipe(map(d => d.data));
+  }
+
   getProductosPorIdCategoria(id_categoria : number){
     return this.httpClient.get<ResponseLista<Producto>>(environment.apiUrl + this.basePath + id_categoria).pipe(map(d => d.data));
   } 
+
 }

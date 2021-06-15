@@ -151,7 +151,7 @@ const modificarConsumo = async (req, res) => {
         nuevoConsumo.detalles = await Consumo.findByPk(idConsumo,{include: DetalleConsumo});
         if (nuevoConsumo){
             return res.status(200).json({
-                mensaje: "Consumo creado con exito",
+                mensaje: "Consumo modificado con exito",
                 dato: nuevoConsumo
             });
         }
@@ -159,7 +159,7 @@ const modificarConsumo = async (req, res) => {
     catch(e){
         console.log(e);
         return res.status(500).json({
-            mensaje: "Ha ocurrido un error para crear un nuevo consumo"
+            mensaje: "Ha ocurrido un error al modificar el consumo"
         });
     }
 }

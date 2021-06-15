@@ -1,7 +1,8 @@
 export class DetalleTabla {
     id: number;
-    nombre: string;
     subtotal: number;
     cantidad: number;
+    nombre: string;
     precio: number;
+    nuevo = true;
 }

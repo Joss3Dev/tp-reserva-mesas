@@ -20,4 +20,8 @@ export class ConsumoService {
   obtenerConsumo(id: number): Observable<Object> {
     return this.httpClient.get(environment.apiUrl + this.basePath + "mesa/" + id);
   }
+
+  actualizarConsumo(consumo: Consumo): Observable<any> {
+    return this.httpClient.put(environment.apiUrl + this.basePath + consumo.id, consumo);
+  }
 }

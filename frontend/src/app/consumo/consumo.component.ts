@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Restaurante } from '../model/restaurante';
 import { RestauranteService } from '../reserva/services/restaurante.service';
 import { MesaService } from '../reserva/services/mesa.service';
@@ -12,6 +12,11 @@ import { Consumo } from '../model/consumo';
 import { Detalle } from '../model/detalle';
 import { FormBuilder, FormGroup, Validators, FormControl} from '@angular/forms';
 import { ConsumoService } from '../service-consumo/consumo.service';
+import { Cliente } from '../model/cliente';
+import { NgbTypeahead } from '@ng-bootstrap/ng-bootstrap';
+import { merge, Observable, OperatorFunction, Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
+import { ClienteService } from '../reserva/services/cliente.service';
 
 @Component({
   selector: 'app-consumo',
@@ -29,9 +34,16 @@ export class ConsumoComponent implements OnInit {
   mesaOcupada : boolean = false;
   mesaNoOcupada: boolean = false;
   id_mesa : number;
+  mesa: Mesa;
   listaDetalle: DetalleTabla[] = [];
+  detalles: Detalle[];
   isMessage: boolean = false;
+  isMessageError: boolean = false;
   message: string;
+  consumo: Consumo;
+  cliente: Cliente;
+  public clientes: Cliente[];
+  productos: Producto[];
 
   constructor( 
     private restauranteService: RestauranteService, 
@@ -39,7 +51,8 @@ export class ConsumoComponent implements OnInit {
     private categoriaService: CategoriaService,
     private formBuilder: FormBuilder,
     private productoService : ProductoService,
-    private consumoService : ConsumoService
+    private consumoService : ConsumoService,
+    private clienteService: ClienteService
   ) { }
 
   ngOnInit() {
@@ -52,6 +65,14 @@ export class ConsumoComponent implements OnInit {
     this.categoriaService.getCategorias().subscribe(data => {
       this.listCategoria = data;
     });
+
+    this.clienteService.getClientes().subscribe(res => {
+      this.clientes = res;
+    })
+
+    this.productoService.getProductos().subscribe(res =>{
+      this.productos = res;
+    })
   }
 
   private inicializarForm(): void {
@@ -63,6 +84,10 @@ export class ConsumoComponent implements OnInit {
   }
 
   obtenerMesas(e: Event) {
+    this.isMessageError = false;
+    this.isMessage = false;
+    this.cliente = null;
+    this.listaDetalle = [];
     if ( this.disabled ) {
       this.disabled = false;
     }
@@ -73,12 +98,30 @@ export class ConsumoComponent implements OnInit {
   }
 
   verificarConsumo(event: Event) {
+    this.isMessageError = false;
+    this.isMessage = false;
+    this.cliente = null;
     this.id_mesa = parseInt((event.target as HTMLInputElement).value);
     this.consumoService.obtenerConsumo(this.id_mesa).subscribe(data => {
-      console.log(data);
       let json : any = data;
       this.mesaOcupada = json.data ? true : false;
-      this.mesaNoOcupada = !this.mesaOcupada; 
+      this.mesaNoOcupada = !this.mesaOcupada;
+      this.listaDetalle = [];
+      if(this.mesaOcupada){
+        this.consumo = data["data"];
+        this.cliente = this.clientes.find(x => x.id === this.consumo.id_cliente);
+        for(let detalle of this.consumo.detalles){
+          var detalle_tabla = new DetalleTabla();
+          var producto = this.productos.find(x => x.id === detalle.id_producto);
+          detalle_tabla.id = producto.id;
+          detalle_tabla.nombre = producto.nombre;
+          detalle_tabla.precio = producto.precio;
+          detalle_tabla.cantidad = detalle.cantidad;
+          detalle_tabla.subtotal = detalle.subtotal;
+          detalle_tabla.nuevo = false;
+          this.listaDetalle.push(detalle_tabla)
+        }
+      }
     });
   }
 
@@ -121,29 +164,68 @@ export class ConsumoComponent implements OnInit {
   }
 
   guardarConsumo() {
-    let consumo : Consumo = new Consumo();
-    consumo.fecha_cierre = null;
-    //Cambiar el id cuando elige un cliente;
-    consumo.id_cliente = 2;
-    consumo.id_mesa = this.id_mesa;
-    consumo.is_open = true;
-    consumo.total = 0;
-    consumo.detalles = [];
-    for ( let dt of this.listaDetalle ) {
-      let detalle : Detalle = new Detalle();
-      detalle.id_producto = dt.id;
-      detalle.cantidad = dt.cantidad;
-      detalle.subtotal = dt.subtotal;
-      consumo.total = consumo.total + detalle.subtotal;
-      consumo.detalles.push(detalle);
+    if(!this.cliente){
+      this.isMessageError = true;
+      this.message = "No se ha ingresado el cliente.";
+      return
+    } 
+    if(this.mesaNoOcupada){
+      let consumo : Consumo = new Consumo();
+      consumo.fecha_cierre = null;
+      consumo.id_cliente = this.cliente.id;
+      consumo.id_mesa = this.id_mesa;
+      consumo.is_open = true;
+      consumo.total = 0;
+      consumo.detalles = [];
+      for ( let dt of this.listaDetalle ) {
+        let detalle : Detalle = new Detalle();
+        detalle.id_producto = dt.id;
+        detalle.cantidad = dt.cantidad;
+        detalle.subtotal = dt.subtotal;
+        consumo.total = consumo.total + detalle.subtotal;
+        consumo.detalles.push(detalle);
+      }
+      this.consumoService.agregarConsumo(consumo).subscribe(data => {
+        let json : any = data;
+        this.isMessage = true;
+        this.message = json.mensaje;
+        this.listaDetalle = [];
+      });
+    } else {
+      let consumo = this.consumo;
+      let detalles_nuevos = this.listaDetalle.filter(x => x.nuevo === true);
+      for(let dt of detalles_nuevos){
+        let detalle : Detalle = new Detalle();
+        detalle.id_producto = dt.id;
+        detalle.cantidad = dt.cantidad;
+        detalle.subtotal = dt.subtotal;
+        consumo.total = consumo.total + detalle.subtotal;
+        consumo.detalles.push(detalle);
+      }
+      this.consumoService.actualizarConsumo(consumo).subscribe(data =>{
+        let json : any = data;
+        this.isMessage = true;
+        this.message = json.mensaje;
+      })
     }
+  }
 
-    this.consumoService.agregarConsumo(consumo).subscribe(data => {
-      let json : any = data;
-      this.isMessage = true;
-      this.message = json.mensaje;
-      this.listaDetalle = [];
-    });
+  @ViewChild('instance', {static: true}) instance: NgbTypeahead;
+  focus$ = new Subject<string>();
+  click$ = new Subject<string>();
+  formatter = (cliente: Cliente) => cliente.nombre+' '+cliente.apellido;
+
+
+  search: OperatorFunction<string, readonly string[]> = (text$: Observable<string>) => {
+    const debouncedText$ = text$.pipe(debounceTime(200), distinctUntilChanged());
+    const clicksWithClosedPopup$ = this.click$.pipe(filter(() => !this.instance));
+    const inputFocus$ = this.focus$;
+    var cadena;
+    cadena = merge(debouncedText$, inputFocus$, clicksWithClosedPopup$).pipe(
+      map(term => (term === '' ? this.clientes
+        : this.clientes.filter(v => (v.nombre+' '+v.apellido).toLowerCase().indexOf(term.toLowerCase()) > -1)).slice(0, 10))
+    );
+    return cadena;
   }
 
 }
