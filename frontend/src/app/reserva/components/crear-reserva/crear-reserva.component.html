@@ -60,26 +60,9 @@
         </div>
       </div>
       <div class="form-group row mb-3">
-        <!-- <label class="col-sm-2 col-form-label">Cedula Cliente</label>
+        <label class="col-sm-2 col-form-label">Cedula Cliente</label>
         <div class="col-sm-2">
-          <input class="form-control" type="number" [(ngModel)]="cedula" name="cedula" [ngClass]="{ 'is-invalid': f.submitted && cedula.invalid }" required>
-          <div *ngIf="f.submitted && cedula.invalid" class="invalid-feedback">
-            <div *ngIf="cedula.errors.required">Cedula requerida</div>
-        </div>
-        </div>
-        <div class="col-sm-2">
-          <input class="form-control" type="text" [(ngModel)]="nombre" name="nombre" readonly placeholder="Nombre Cliente" [ngClass]="{ 'is-invalid': f.submitted && nombre.invalid }" required>
-          <div *ngIf="f.submitted && nombre.invalid" class="invalid-feedback">
-            <div *ngIf="nombre.errors.required">Busque un cliente</div>
-        </div>
-        </div> -->
-        <div class="col-sm-2">
-          <button type="button" class="btn btn-outline-secondary" (click)="open()">Buscar cliente</button>
-        </div>
-      </div>
-      <div class="form-group row mb-3">
-        <label for="typeahead-focus">Search for a state:</label>
-        <input
+          <input
           id="typeahead-focus"
           type="text"
           class="form-control"
@@ -92,6 +75,10 @@
           (click)="click$.next($any($event).target.value)"
           #instance="ngbTypeahead"
         />
+        </div>
+        <div class="col-sm-2">
+          <button type="button" class="btn btn-outline-secondary" (click)="open()">Crear cliente</button>
+        </div>
       </div>
       <div class="form-group row mb-3">
         <label class="col-sm-2 col-form-label">Cantidad Solicitada</label>

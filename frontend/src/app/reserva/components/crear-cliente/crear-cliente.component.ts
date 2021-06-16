@@ -10,7 +10,7 @@ import { ClienteService } from '../../services/cliente.service';
 })
 export class CrearClienteComponent implements OnInit {
 
-  @Input("cedula") cliente: Cliente;
+  cliente: Cliente = new Cliente();
   constructor(private clienteService: ClienteService, public activeModal: NgbActiveModal) { }
 
   ngOnInit() {
@@ -22,8 +22,8 @@ export class CrearClienteComponent implements OnInit {
       console.log(res);
       this.cliente = res.dato;
       this.activeModal.close(this.cliente);
+      return res;
     })
-    
   }
 
   salir(){

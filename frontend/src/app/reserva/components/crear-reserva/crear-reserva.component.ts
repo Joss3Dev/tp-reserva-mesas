@@ -28,7 +28,9 @@ export class CrearReservaComponent implements OnInit {
   nombre: string;
   mesas: Mesa[];
   public clientes: Cliente[];
+  id_cliente: number;
   cliente: Cliente;
+  cliente2: Cliente = new Cliente();
   activar=false;
   clienteError = false;
   reservaError =  false;
@@ -38,30 +40,10 @@ export class CrearReservaComponent implements OnInit {
   constructor(private modalService: NgbModal, private restauranteService: RestauranteService, private mesaService: MesaService, private reservaService: ReservaService, private clienteService: ClienteService,private router: Router ) {}
 
   open() {
-
-    if(!this.cliente.cedula) return;
-    this.clienteService.existe(this.cliente.cedula).subscribe(res=>{
-      if(!res["data"]){
-        this.cliente.nombre=""
-        this.cliente.apellido=""
-        const modalRef = this.modalService.open(CrearClienteComponent,{backdrop: 'static'});
-        let aux = new Cliente();
-        aux.cedula=this.cliente.cedula;
-        aux.nombre=this.cliente.nombre;
-        aux.apellido=this.cliente.apellido;
-        modalRef.componentInstance.cliente = aux;
-        modalRef.result.then(val => {
-          if(val)this.cliente=val
-
-        })
-      }
-      else{
-        this.cliente=res["data"];
-
-      }
-
-    })
-
+    const modalRef = this.modalService.open(CrearClienteComponent,{backdrop: 'static'}).result.then(res => {
+      this.cliente = res;
+      this.clientes.push(this.cliente);
+    });
   }
 
   guardar(){
@@ -139,7 +121,6 @@ export class CrearReservaComponent implements OnInit {
     this.restauranteService.getRestaurente().subscribe(res=>this.lista=res);
     this.clienteService.getClientes().subscribe(res => {
       this.clientes = res;
-      console.log(this.clientes);
     })
     this.mesas = []
   }
@@ -168,12 +149,10 @@ export class CrearReservaComponent implements OnInit {
     const clicksWithClosedPopup$ = this.click$.pipe(filter(() => !this.instance));
     const inputFocus$ = this.focus$;
     var cadena;
-    console.log(this.clientes)
     cadena = merge(debouncedText$, inputFocus$, clicksWithClosedPopup$).pipe(
       map(term => (term === '' ? this.clientes
         : this.clientes.filter(v => (v.nombre+' '+v.apellido).toLowerCase().indexOf(term.toLowerCase()) > -1)).slice(0, 10))
     );
-    console.log(cadena)
     return cadena;
   }
 

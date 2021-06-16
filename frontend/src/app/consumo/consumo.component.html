@@ -32,7 +32,6 @@
                 type="text"
                 class="form-control"
                 [(ngModel)]="cliente"
-                name="cliente"
                 [ngbTypeahead]="search"
                 [inputFormatter]="formatter"
                 [resultFormatter]="formatter"
@@ -41,6 +40,9 @@
                 required
               />
             </div>
+            <div class="col-sm-2">
+                <button type="button" class="btn btn-outline-secondary" (click)="crearCliente()">Crear cliente</button>
+              </div>
         </div>
     </div>
     <div *ngIf="mesaNoOcupada" class="container mt-4">

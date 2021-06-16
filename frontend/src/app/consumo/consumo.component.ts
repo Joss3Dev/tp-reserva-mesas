@@ -13,15 +13,17 @@ import { Detalle } from '../model/detalle';
 import { FormBuilder, FormGroup, Validators, FormControl} from '@angular/forms';
 import { ConsumoService } from '../service-consumo/consumo.service';
 import { Cliente } from '../model/cliente';
-import { NgbTypeahead } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbTypeahead } from '@ng-bootstrap/ng-bootstrap';
 import { merge, Observable, OperatorFunction, Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
 import { ClienteService } from '../reserva/services/cliente.service';
+import { CrearClienteComponent } from '../reserva/components/crear-cliente/crear-cliente.component';
 
 @Component({
   selector: 'app-consumo',
   templateUrl: './consumo.component.html',
-  styleUrls: ['./consumo.component.css']
+  styleUrls: ['./consumo.component.css'],
+  styles: [`#ngb-live{display: none;}`]
 })
 export class ConsumoComponent implements OnInit {
 
@@ -42,6 +44,7 @@ export class ConsumoComponent implements OnInit {
   message: string;
   consumo: Consumo;
   cliente: Cliente;
+  id_cliente: number;
   public clientes: Cliente[];
   productos: Producto[];
 
@@ -52,7 +55,8 @@ export class ConsumoComponent implements OnInit {
     private formBuilder: FormBuilder,
     private productoService : ProductoService,
     private consumoService : ConsumoService,
-    private clienteService: ClienteService
+    private clienteService: ClienteService,
+    private modalService: NgbModal
   ) { }
 
   ngOnInit() {
@@ -226,6 +230,13 @@ export class ConsumoComponent implements OnInit {
         : this.clientes.filter(v => (v.nombre+' '+v.apellido).toLowerCase().indexOf(term.toLowerCase()) > -1)).slice(0, 10))
     );
     return cadena;
+  }
+
+  crearCliente(){
+    const modalRef = this.modalService.open(CrearClienteComponent,{backdrop: 'static'}).result.then(res => {
+      this.cliente = res;
+      this.clientes.push(this.cliente);
+    });
   }
 
 }
