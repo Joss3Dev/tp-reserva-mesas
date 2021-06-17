@@ -24,4 +24,8 @@ export class ConsumoService {
   actualizarConsumo(consumo: Consumo): Observable<any> {
     return this.httpClient.put(environment.apiUrl + this.basePath + consumo.id, consumo);
   }
+
+  cerrarConsumo(id: number): Observable<any>{
+    return this.httpClient.delete(environment.apiUrl + this.basePath + "cerrar/" + id);
+  }
 }

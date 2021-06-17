@@ -45,6 +45,9 @@
               </div>
         </div>
     </div>
+    <div *ngIf="cerrarMesa" class="alert alert-dark" role="alert">
+        La mesa esta cerrada!
+    </div>
     <div *ngIf="mesaNoOcupada" class="container mt-4">
         <div class="row">
             <div class="col-6">
@@ -198,6 +201,53 @@
             </div>
         </div>
     </div>
+    <button *ngIf="mesaOcupada" type="button" (click)="cerrarConsumo(content)" class="btn btn-dark ms-3 mt-4 w-25">Cerrar Consumo</button>
 </div>
+<ng-template #content>
+    <div id="infomation">
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">Reporte</h4>
+        </div>
+        <div class="modal-body">
+          <div class="content mt-2">
+            <div class="row">
+                <label class="form-label">Fecha de creación: {{consumo.fecha_creacion}}</label>
+            </div>
+            <div class="row">
+                <label class="form-label">Fecha de cierre: {{consumo.fecha_cierre}}</label>
+            </div>
+            <div class="row">
+                <label class="form-label">Cliente: {{cliente.nombre + cliente.apellido}}</label>
+            </div>
+            <div class="row">
+                <table class="table">
+                    <thead>
+                      <tr>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Cantidad</th>
+                        <th scope="col">Precio</th>
+                        <th scope="col">SubTotal</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let detalle of listaDetalle">
+                            <td>{{detalle.nombre}}</td>
+                            <td>{{detalle.cantidad}}</td>
+                            <td>{{detalle.precio}}</td>
+                            <td>{{detalle.subtotal}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="row">
+                <label class="fw-bold">Total: {{consumo.total}}</label>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-dark" (click)="generarPDF()">Generar PDF</button>
+        </div>
+    </div>
+</ng-template>
 
 

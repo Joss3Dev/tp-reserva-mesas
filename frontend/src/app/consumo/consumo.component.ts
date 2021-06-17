@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Restaurante } from '../model/restaurante';
 import { RestauranteService } from '../reserva/services/restaurante.service';
 import { MesaService } from '../reserva/services/mesa.service';
@@ -13,11 +13,12 @@ import { Detalle } from '../model/detalle';
 import { FormBuilder, FormGroup, Validators, FormControl} from '@angular/forms';
 import { ConsumoService } from '../service-consumo/consumo.service';
 import { Cliente } from '../model/cliente';
-import { NgbModal, NgbTypeahead } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbTypeahead, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { merge, Observable, OperatorFunction, Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
 import { ClienteService } from '../reserva/services/cliente.service';
 import { CrearClienteComponent } from '../reserva/components/crear-cliente/crear-cliente.component';
+import { jsPDF } from 'jspdf';
 
 @Component({
   selector: 'app-consumo',
@@ -25,7 +26,9 @@ import { CrearClienteComponent } from '../reserva/components/crear-cliente/crear
   styleUrls: ['./consumo.component.css'],
   styles: [`#ngb-live{display: none;}`]
 })
-export class ConsumoComponent implements OnInit {
+export class ConsumoComponent implements OnInit { 
+
+  @ViewChild('infomation', {static: false}) element: ElementRef
 
   formDetalleConsumo: FormGroup;
   listRestaurante : Restaurante[];
@@ -47,6 +50,8 @@ export class ConsumoComponent implements OnInit {
   id_cliente: number;
   public clientes: Cliente[];
   productos: Producto[];
+  cerrarMesa: boolean = false;
+  modalRef: NgbModalRef;
 
   constructor( 
     private restauranteService: RestauranteService, 
@@ -108,22 +113,29 @@ export class ConsumoComponent implements OnInit {
     this.id_mesa = parseInt((event.target as HTMLInputElement).value);
     this.consumoService.obtenerConsumo(this.id_mesa).subscribe(data => {
       let json : any = data;
+      console.log(json.data);
       this.mesaOcupada = json.data ? true : false;
       this.mesaNoOcupada = !this.mesaOcupada;
       this.listaDetalle = [];
       if(this.mesaOcupada){
-        this.consumo = data["data"];
-        this.cliente = this.clientes.find(x => x.id === this.consumo.id_cliente);
-        for(let detalle of this.consumo.detalles){
-          var detalle_tabla = new DetalleTabla();
-          var producto = this.productos.find(x => x.id === detalle.id_producto);
-          detalle_tabla.id = producto.id;
-          detalle_tabla.nombre = producto.nombre;
-          detalle_tabla.precio = producto.precio;
-          detalle_tabla.cantidad = detalle.cantidad;
-          detalle_tabla.subtotal = detalle.subtotal;
-          detalle_tabla.nuevo = false;
-          this.listaDetalle.push(detalle_tabla)
+        if( json.data.is_open ){
+          this.consumo = data["data"];
+          this.cliente = this.clientes.find(x => x.id === this.consumo.id_cliente);
+          for(let detalle of this.consumo.detalles){
+            var detalle_tabla = new DetalleTabla();
+            var producto = this.productos.find(x => x.id === detalle.id_producto);
+            detalle_tabla.id = producto.id;
+            detalle_tabla.nombre = producto.nombre;
+            detalle_tabla.precio = producto.precio;
+            detalle_tabla.cantidad = detalle.cantidad;
+            detalle_tabla.subtotal = detalle.subtotal;
+            detalle_tabla.nuevo = false;
+            this.listaDetalle.push(detalle_tabla)
+          }
+        }
+        else{
+          this.mesaNoOcupada = this.mesaOcupada = false;
+          this.cerrarMesa = true;
         }
       }
     });
@@ -237,6 +249,23 @@ export class ConsumoComponent implements OnInit {
       this.cliente = res;
       this.clientes.push(this.cliente);
     });
+  }
+
+  cerrarConsumo(content) { 
+    this.consumoService.cerrarConsumo(this.consumo.id).subscribe(json => {
+      this.consumo = json.dato;
+      this.modalRef = this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'});
+    });
+  }
+
+  generarPDF() {
+    let pdf = new jsPDF('p', 'pt', 'a4');
+    pdf.html(this.element.nativeElement, {
+      callback: pdf => {
+        pdf.save("reporte.pdf");
+      }
+    });
+    this.modalRef.close();
   }
 
 }
