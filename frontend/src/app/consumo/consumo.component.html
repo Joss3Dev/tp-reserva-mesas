@@ -204,12 +204,11 @@
     <button *ngIf="mesaOcupada" type="button" (click)="cerrarConsumo(content)" class="btn btn-dark ms-3 mt-4 w-25">Cerrar Consumo</button>
 </div>
 <ng-template #content>
-    <div id="infomation">
-        <div class="modal-header">
-            <h4 class="modal-title" id="modal-basic-title">Reporte</h4>
-        </div>
-        <div class="modal-body">
-          <div class="content mt-2">
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Reporte</h4>
+    </div>
+    <div class="modal-body" id="information" #information>
+        <div class="content mt-2">
             <div class="row">
                 <label class="form-label">Fecha de creación: {{consumo.fecha_creacion}}</label>
             </div>
@@ -242,11 +241,10 @@
             <div class="row">
                 <label class="fw-bold">Total: {{consumo.total}}</label>
             </div>
-          </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-outline-dark" (click)="generarPDF()">Generar PDF</button>
-        </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline-dark" (click)="generarPDF()">Generar PDF</button>
     </div>
 </ng-template>
 
