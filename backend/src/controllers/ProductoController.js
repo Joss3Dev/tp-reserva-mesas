@@ -63,7 +63,7 @@ const eliminarProducto = async (req, res) =>  {
 const actualizarProducto = async (req, res) => {
     try {
         let { id } = req.params;
-        await Producto.update(req.body, { where: {id}});
+        await Producto.update(req.body, { where: {id},fields: ["nombre", "id_categoria","precio"]});
         return res.status(200).json({
             mensaje: "Producto actualizado"
         });

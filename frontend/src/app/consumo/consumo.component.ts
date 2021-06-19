@@ -26,13 +26,13 @@ import { jsPDF } from 'jspdf';
   styleUrls: ['./consumo.component.css'],
   styles: [`#ngb-live{display: none;}`]
 })
-export class ConsumoComponent implements OnInit { 
+export class ConsumoComponent implements OnInit {
 
   @ViewChild('infomation', {static: false}) element: ElementRef
 
   formDetalleConsumo: FormGroup;
   listRestaurante : Restaurante[];
-  listMesa : Mesa[]; 
+  listMesa : Mesa[];
   listCategoria : Categoria[];
   listaProducto: Producto[];
   disabled: Boolean = true;
@@ -53,9 +53,9 @@ export class ConsumoComponent implements OnInit {
   cerrarMesa: boolean = false;
   modalRef: NgbModalRef;
 
-  constructor( 
-    private restauranteService: RestauranteService, 
-    private mesaService: MesaService, 
+  constructor(
+    private restauranteService: RestauranteService,
+    private mesaService: MesaService,
     private categoriaService: CategoriaService,
     private formBuilder: FormBuilder,
     private productoService : ProductoService,
@@ -130,6 +130,7 @@ export class ConsumoComponent implements OnInit {
             detalle_tabla.cantidad = detalle.cantidad;
             detalle_tabla.subtotal = detalle.subtotal;
             detalle_tabla.nuevo = false;
+            detalle_tabla.id_detalle = detalle.id;
             this.listaDetalle.push(detalle_tabla)
           }
         }
@@ -145,7 +146,7 @@ export class ConsumoComponent implements OnInit {
     let detalleForm  = this.formDetalleConsumo.value;
     this.inicializarForm();
 
-    let prod : Producto[] = this.listaProducto.filter(p => p.id == detalleForm.id_producto); 
+    let prod : Producto[] = this.listaProducto.filter(p => p.id == detalleForm.id_producto);
     const detalle : DetalleTabla = new DetalleTabla();
     detalle.id = prod[0].id;
     detalle.nombre = prod[0].nombre;
@@ -184,7 +185,7 @@ export class ConsumoComponent implements OnInit {
       this.isMessageError = true;
       this.message = "No se ha ingresado el cliente.";
       return
-    } 
+    }
     if(this.mesaNoOcupada){
       let consumo : Consumo = new Consumo();
       consumo.fecha_cierre = null;
@@ -209,15 +210,20 @@ export class ConsumoComponent implements OnInit {
       });
     } else {
       let consumo = this.consumo;
-      let detalles_nuevos = this.listaDetalle.filter(x => x.nuevo === true);
-      for(let dt of detalles_nuevos){
+      consumo.id_cliente = this.cliente.id;
+      //let detalles_nuevos = this.listaDetalle.filter(x => x.nuevo === true);
+      consumo.detalles=[];
+      consumo.total = 0;
+      for(let dt of this.listaDetalle){
         let detalle : Detalle = new Detalle();
         detalle.id_producto = dt.id;
         detalle.cantidad = dt.cantidad;
         detalle.subtotal = dt.subtotal;
         consumo.total = consumo.total + detalle.subtotal;
+        detalle.id = dt.id_detalle;
         consumo.detalles.push(detalle);
       }
+      console.log(consumo)
       this.consumoService.actualizarConsumo(consumo).subscribe(data =>{
         let json : any = data;
         this.isMessage = true;
@@ -251,7 +257,7 @@ export class ConsumoComponent implements OnInit {
     });
   }
 
-  cerrarConsumo(content) { 
+  cerrarConsumo(content) {
     this.consumoService.cerrarConsumo(this.consumo.id).subscribe(json => {
       this.consumo = json.dato;
       this.modalRef = this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'});

@@ -5,4 +5,5 @@ export class DetalleTabla {
     nombre: string;
     precio: number;
     nuevo = true;
+    id_detalle: number;
 }
