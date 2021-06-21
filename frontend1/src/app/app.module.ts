@@ -12,6 +12,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ListaReservasComponent } from './reserva/components/listar-reservas/lista-reservas.component';
 import { FiltroListaReservasComponent } from './reserva/components/filtro-listar-componentes/filtro-lista-reservas.component';
 import { DatePipe } from '@angular/common';
+import { AutocompleteLibModule } from 'angular-ng-autocomplete';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { DatePipe } from '@angular/common';
     HttpClientModule,
     NgbModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    AutocompleteLibModule
   ],
   providers: [{ provide: "BASE_API_URL", useValue: environment.apiUrl }, DatePipe],
   bootstrap: [AppComponent],

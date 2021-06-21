@@ -23,18 +23,12 @@ const crearConsumo = async (req, res) => {
             fields: ["fecha_creacion","fecha_cierre","id_cliente","total","is_open","id_mesa"],
             returning: ["id","fecha_creacion","fecha_cierre","id_cliente","total","is_open","id_mesa"]
         });
-        //TODO: CONSULTAR PRECIO POR PRODUCTO LADO SERVIDOR
-        let total = 0
+        
         //colocar el id del consumo a cada detalle y agregar
         for (const i in consumo.detalles) {
             consumo.detalles[i].id_consumo = nuevoConsumo.id
             consumo.detalles[i] = await DetalleConsumo.create(consumo.detalles[i],{fields:["id_consumo","cantidad","id_producto","subtotal"],returning:true})
-            total += consumo.detalles[i].subtotal
         }
-
-        nuevoConsumo.total = total
-
-        await nuevoConsumo.save({fields:["total"]})
 
         nuevoConsumo = await Consumo.findByPk(nuevoConsumo.id,{include: DetalleConsumo});
         
@@ -128,21 +122,22 @@ const modificarConsumo = async (req, res) => {
         let consumo = req.body;//tiene un atributo extra indicando los detalles a eliminar, un array de id 'eliminados'
         
         let consumoBD = await Consumo.findByPk(idConsumo,{include: DetalleConsumo});
-        console.log(consumoBD);
         consumoBD.id_cliente = consumo.id_cliente;
 
         //TODO: CONSULTAR PRECIO POR PRODUCTO LADO SERVIDOR 
         let total = 0
         //actualizar los detalles viejos y crear los nuevos
+        let aux;
         for (const i in consumo.detalles) {
-
-            if(consumo.detalles[i].id){//Si tiene id entonces actualizar
-                await DetalleConsumo.update(consumo.detalles[i], { where: { id : consumo.detalles[i].id},fields:["id_consumo","cantidad","id_producto","subtotal"],returning:true});
-            }
-            else{//Si no tiene entonces crear
+            console.log(consumo.detalles[i].id)
+             if(consumo.detalles[i].id){//Si tiene id entonces actualizar
+                aux = consumo.detalles[i].id;
+                await DetalleConsumo.update(consumo.detalles[i], { where: { id : aux},fields:["id_consumo","cantidad","id_producto","subtotal"]});
+             }
+             else{//Si no tiene entonces crear
                 consumo.detalles[i].id_consumo = consumoBD.id;
                 consumo.detalles[i] = await DetalleConsumo.create(consumo.detalles[i],{fields:["id_consumo","cantidad","id_producto","subtotal"],returning:true})
-            }
+             }
             total += consumo.detalles[i].subtotal
         }
         
@@ -157,7 +152,7 @@ const modificarConsumo = async (req, res) => {
         nuevoConsumo.detalles = await Consumo.findByPk(idConsumo,{include: DetalleConsumo});
         if (nuevoConsumo){
             return res.status(200).json({
-                mensaje: "Consumo creado con exito",
+                mensaje: "Consumo modificado con exito",
                 dato: nuevoConsumo
             });
         }
@@ -165,7 +160,7 @@ const modificarConsumo = async (req, res) => {
     catch(e){
         console.log(e);
         return res.status(500).json({
-            mensaje: "Ha ocurrido un error para crear un nuevo consumo"
+            mensaje: "Ha ocurrido un error al modificar el consumo"
         });
     }
 }

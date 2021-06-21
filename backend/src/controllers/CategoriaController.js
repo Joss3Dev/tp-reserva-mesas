@@ -65,7 +65,7 @@ const eliminarCategoria = async (req, res) =>  {
 const actualizarCategoria = async (req, res) => {
     try {
         let { id } = req.params;
-        await Categoria.update(req.body, { where: { id }});
+        await Categoria.update(req.body, { where: { id },fields:["nombre"]});
         return res.status(200).json({
             mensaje: "Categoria actualizada"
         });

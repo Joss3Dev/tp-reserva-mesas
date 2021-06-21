@@ -25,6 +25,7 @@ const crearProducto = async (req, res) => {
 const listarProductos = async(req, res) => {
     try {
         const { idCategoria } = req.params;
+        console.log(idCategoria);
         let productos;
         if(idCategoria){
             productos = await Producto.findAll({
@@ -62,7 +63,7 @@ const eliminarProducto = async (req, res) =>  {
 const actualizarProducto = async (req, res) => {
     try {
         let { id } = req.params;
-        await Producto.update(req.body, { where: {id}});
+        await Producto.update(req.body, { where: {id},fields: ["nombre", "id_categoria","precio"]});
         return res.status(200).json({
             mensaje: "Producto actualizado"
         });
